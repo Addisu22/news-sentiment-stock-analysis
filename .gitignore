@@ -1,2 +1,5 @@
-Data
-.venv
+pycache/
+.env
+*.ipynb_checkpoints
+.vscode/
+Data/
