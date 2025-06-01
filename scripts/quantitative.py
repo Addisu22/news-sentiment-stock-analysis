@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import talib
 import pandas as pd
 from pynance import Returns, Risk, Portfolio
@@ -76,7 +77,7 @@ def fin_metrics(df):
     df = df.set_index('Date').sort_index()
 
     # Calculate daily log returns
-    df['Log_Returns'] = np.log(df['Close'] / df['Close'].shift(1))
+    df['Log_Returns'] = np.log(df['Adj Close'] / df['Adj Close'].shift(1))
 
     # Annualized volatility (std dev of returns * sqrt trading days)
     volatility = df['Log_Returns'].std() * np.sqrt(252)
