@@ -103,7 +103,7 @@ def publication_trend(df, date='date', freq='D'):
         return None
     
 
-    def preprocess_text(df, text_col='headline'):  
+def preprocess_text(df, text_col='headline'):  
       try:
         if text_col not in df.columns:
             raise ValueError(f"Column '{text_col}' not found in dataframe.")
@@ -117,7 +117,7 @@ def publication_trend(df, date='date', freq='D'):
         return None
       
 
-    def extract_topics(df, text_col='headline', num_topics=5, num_words=10):
+def extract_topics(df, text_col='headline', num_topics=5, num_words=10):
       try:
         if df is None or text_col not in df.columns:
             raise ValueError("Valid DataFrame with text column is required.")
