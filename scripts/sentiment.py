@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns  
 import logging
 import re
+from collections import Counter
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 
