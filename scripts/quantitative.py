@@ -69,7 +69,7 @@ def apply_ta(df):
     return df
 
 
-def compute_metrics(df):
+def fin_metrics(df):
   
     # Ensure Date is datetime and set as index
     df['Date'] = pd.to_datetime(df['Date'])
