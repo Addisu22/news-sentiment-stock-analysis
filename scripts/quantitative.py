@@ -44,7 +44,7 @@ def visualize_data(file_paths):
 
     return df[['Date', 'Adj Close', 'Ticker']]
 
-def apply_talib_indicators(df):
+def apply_ta(df):
 
     # Check if necessary columns exist
     if 'Adj Close' not in df.columns:
