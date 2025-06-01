@@ -98,3 +98,55 @@ def fin_met(df):
     }
     
     return met
+
+
+
+
+def visualize_indicators(df, ticker_name="Stock"):
+  
+    # Convert 'Date' to datetime and sort
+    df['Date'] = pd.to_datetime(df['Date'])
+    df = df.sort_values('Date')
+
+    # Calculate indicators
+    df['SMA20'] = talib.SMA(df['Adj Close'], timeperiod=20)
+    df['SMA50'] = talib.SMA(df['Adj Close'], timeperiod=50)
+    df['RSI'] = talib.RSI(df['Adj Close'], timeperiod=14)
+    macd, macdsignal, macdhist = talib.MACD(df['Adj Close'], fastperiod=12, slowperiod=26, signalperiod=9)
+    df['MACD'] = macd
+    df['MACD_Signal'] = macdsignal
+
+    # Plot Closing Price with Moving Averages
+    plt.figure(figsize=(14, 6))
+    plt.plot(df['Date'], df['Adj Close'], label='Adj Close', color='black')
+    plt.plot(df['Date'], df['SMA20'], label='SMA 20', color='blue', linestyle='--')
+    plt.plot(df['Date'], df['SMA50'], label='SMA 50', color='green', linestyle='--')
+    plt.title(f'{ticker_name} - Adj Close Price & Moving Averages')
+    plt.xlabel('Date')
+    plt.ylabel('Adj Price')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    # Plot RSI
+    plt.figure(figsize=(14, 3))
+    plt.plot(df['Date'], df['RSI'], label='RSI', color='purple')
+    plt.axhline(70, color='red', linestyle='--')
+    plt.axhline(30, color='green', linestyle='--')
+    plt.title(f'{ticker_name} - Relative Strength Index (RSI)')
+    plt.xlabel('Date')
+    plt.ylabel('RSI')
+    plt.grid(True)
+    plt.show()
+
+    # Plot MACD
+    plt.figure(figsize=(14, 4))
+    plt.plot(df['Date'], df['MACD'], label='MACD', color='blue')
+    plt.plot(df['Date'], df['MACD_Signal'], label='Signal', color='red')
+    plt.title(f'{ticker_name} - MACD')
+    plt.xlabel('Date')
+    plt.ylabel('MACD Value')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
