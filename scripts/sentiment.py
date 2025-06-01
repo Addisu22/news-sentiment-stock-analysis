@@ -3,15 +3,44 @@ import numpy as  np
 import textblob as tb  
 import matplotlib.pyplot as plt
 import seaborn as sns  
+import logging
 
+def load_data(data_path):
 
-def load_data(filepath):
-    return pd.read_csv(filepath)
+    try:
+        df = pd.read_csv(data_path)
+        logging.info(f"Loaded data with shape: {df.shape}")
+
+        # Ensure required columns exist
+        required_cols = ['headline', 'date']
+        for col in required_cols:
+            if col not in df.columns:
+                raise KeyError(f"Missing required column: '{col}'")
+
+        # Convert date to datetime, coerce errors
+        df['date'] = pd.to_datetime(df['date'], errors='coerce')
+
+        # Drop rows with missing required data
+        df = df.dropna(subset=['headline', 'date'])
+        logging.info(f"Data after dropping missing headline/date rows: {df.shape}")
+
+        return df
+
+    except FileNotFoundError:
+        logging.error(f"File not found: {data_path}")
+        return None
+    except pd.errors.EmptyDataError:
+        logging.error("File is empty")
+        return None
+    except Exception as e:
+        logging.error(f"Error loading data: {e}")
+        return None
 
 def compute_sentiment(df, text_col="headline"):
     df = df.copy()
-    df["Polarity"] = df[text_col].astype(str).apply(lambda x: TextBlob(x).sentiment.polarity)
-    df["Subjectivity"] = df[text_col].astype(str).apply(lambda x: TextBlob(x).sentiment.subjectivity)
+    # Add sentiment polarity and subjectivity
+    df["Polarity"] = df[text_col].astype(str).apply(lambda x: tb(x).sentiment.polarity)
+    df["Subjectivity"] = df[text_col].astype(str).apply(lambda x: tb(x).sentiment.subjectivity)
     return df
 
 def filter_company_news(df, companies):
