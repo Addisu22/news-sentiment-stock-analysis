@@ -80,3 +80,21 @@ def count_articles_per_publisher(df, publisher='publisher'):
         print(f"Error in count_articles_per_publisher: {e}")
         return None
 
+
+def publication_trend(df, date='date', freq='D'):
+    try:
+        if date not in df.columns:
+            raise ValueError(f"Column '{date}' not found in dataframe.")
+        
+        # Convert to datetime
+        df[date] = pd.to_datetime(df[date], errors='coerce')
+        df = df.dropna(subset=[date])
+        
+        # Group and count articles by time period
+        counts = df.groupby(df[date].dt.to_period(freq)).size()
+        counts.index = counts.index.to_timestamp()
+        counts.name = 'article_count'
+        return counts
+    except Exception as e:
+        print(f"Error in publication_trend: {e}")
+        return None
