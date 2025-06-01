@@ -140,3 +140,38 @@ def extract_topics(df, text_col='headline', num_topics=5, num_words=10):
       except Exception as e:
         print(f"Error in extract_topics: {e}")
         return None
+
+
+
+def analyze_publication_frequency(df):
+    try:
+        df['date'] = pd.to_datetime(df['date'])
+        daily_counts = df['date'].dt.date.value_counts().sort_index()
+        daily_counts.plot(figsize=(12, 5), title='Article Count Over Time', xlabel='Date', ylabel='Articles')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+        return daily_counts
+    except Exception as e:
+        print(f"Error in publication frequency analysis: {e}")
+        return None
+
+def analyze_publishing_time(df):
+    try:
+        if 'time' not in df.columns:
+            print("Warning: 'time' column not found. Publishing time analysis skipped.")
+            return None
+        
+        df['datetime'] = pd.to_datetime(df['date'] + ' ' + df['time'], errors='coerce')
+        df = df.dropna(subset=['datetime'])
+        df['hour'] = df['datetime'].dt.hour
+        hourly_counts = df['hour'].value_counts().sort_index()
+        
+        hourly_counts.plot(kind='bar', figsize=(10, 5), title='Article Count by Hour of Day', xlabel='Hour', ylabel='Articles')
+        plt.grid(axis='y')
+        plt.tight_layout()
+        plt.show()
+        return hourly_counts
+    except Exception as e:
+        print(f"Error in publishing time analysis: {e}")
+        return None
