@@ -32,11 +32,21 @@ def article_count_per_publisher(df):
         return None
 
 def publication_trend(df, freq='D'):
+    # try:
+    #     return df.groupby(df['Date'].dt.to_period(freq)).size().rename("Article_Count")
+    # except Exception as e:
+    #     print(f"[Error analyzing publication trend] {e}")
+    #     return None
     try:
-        return df.groupby(df['Date'].dt.to_period(freq)).size().rename("Article_Count")
+        if 'Date' not in df.columns:
+            raise ValueError("Missing 'Date' column.")
+        df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+        df.dropna(subset=['Date'], inplace=True)
+        grouped = df.groupby(df['Date'].dt.to_period(freq)).size().rename("Article_Count")
+        return grouped
     except Exception as e:
         print(f"[Error analyzing publication trend] {e}")
-        return None
+        return pd.Series()
 
 
 
