@@ -158,7 +158,7 @@ def analyze_publication_frequency(df):
 
 def analyze_publishing_time(df):
     try:
-        if 'time' not in df.columns:
+        if 'date' not in df.columns:
             print("Warning: 'time' column not found. Publishing time analysis skipped.")
             return None
         
@@ -174,4 +174,27 @@ def analyze_publishing_time(df):
         return hourly_counts
     except Exception as e:
         print(f"Error in publishing time analysis: {e}")
+        return None
+    
+
+def top_publishers(df, top_n=10):
+    try:
+        publisher_counts = df['publisher'].value_counts().head(top_n)
+        return publisher_counts
+    except Exception as e:
+        print(f"Error extracting top publishers: {e}")
+        return None
+
+def extract_email_domains(df):
+    try:
+        email_publishers = df['publisher'].dropna()
+        domain_pattern = r'@([\w\.-]+\.\w+)'
+        domains = email_publishers[email_publishers.str.contains('@')].apply(
+            lambda x: re.findall(domain_pattern, x.lower())
+        )
+        domain_list = [d[0] for d in domains if d]
+        domain_counts = pd.Series(Counter(domain_list)).sort_values(ascending=False)
+        return domain_counts
+    except Exception as e:
+        print(f"Error extracting email domains: {e}")
         return None
