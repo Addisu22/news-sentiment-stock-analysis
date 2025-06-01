@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import talib
 import pandas as pd
-from pynance import Returns, Risk, Portfolio
+# from pynance import Returns, Risk, Portfolio
 
 
 
