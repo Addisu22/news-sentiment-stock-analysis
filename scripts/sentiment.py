@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as  np   
-import textblob as tb    
+import textblob as tb  
+import matplotlib.pyplot as plt
+import seaborn as sns  
 
 
 def load_data(filepath):
