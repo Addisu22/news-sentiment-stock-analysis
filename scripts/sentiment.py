@@ -5,6 +5,43 @@ import matplotlib.pyplot as plt
 import seaborn as sns  
 import logging
 
+
+def load_news_data(file_path):
+    try:
+        df = pd.read_csv(file_path)
+        df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+        df.dropna(subset=['Date'], inplace=True)
+        return df
+    except Exception as e:
+        print(f"[Error loading data] {e}")
+        return None
+
+def headline_length_stats(df):
+    try:
+        df['Length'] = df['Headline'].astype(str).apply(len)
+        return df['Length'].describe()
+    except Exception as e:
+        print(f"[Error in headline length stats] {e}")
+        return None
+
+def article_count_per_publisher(df):
+    try:
+        return df['Publisher'].value_counts()
+    except Exception as e:
+        print(f"[Error counting articles per publisher] {e}")
+        return None
+
+def publication_trend(df, freq='D'):
+    try:
+        return df.groupby(df['Date'].dt.to_period(freq)).size().rename("Article_Count")
+    except Exception as e:
+        print(f"[Error analyzing publication trend] {e}")
+        return None
+
+
+
+
+
 def load_data(data_path):
 
     try:
