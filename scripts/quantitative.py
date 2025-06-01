@@ -2,6 +2,10 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import talib
+import pandas as pd
+from pynance import Returns, Risk, Portfolio
+
+
 
 def load_data(file_paths):
     dfs = []
@@ -63,3 +67,30 @@ def apply_ta(df):
     df['MACD_Hist'] = macdhist
     
     return df
+
+
+def compute_metrics(df):
+  
+    # Ensure Date is datetime and set as index
+    df['Date'] = pd.to_datetime(df['Date'])
+    df = df.set_index('Date').sort_index()
+
+    # Calculate daily returns
+    returns = Returns.calculate(df['Close'], returns_type='log')
+
+    # Calculate volatility (standard deviation of returns)
+    volatility = Risk.volatility(returns, window=252)  # annualized volatility
+
+    # Calculate Sharpe ratio (using risk-free rate = 0 for simplicity)
+    sharpe_ratio = Risk.sharpe_ratio(returns, risk_free_rate=0.0, window=252)
+
+    # Calculate max drawdown
+    max_drawdown = Risk.max_drawdown(df['Close'])
+
+    metrics = {
+        "Annualized Volatility": volatility[-1],
+        "Annualized Sharpe Ratio": sharpe_ratio[-1],
+        "Maximum Drawdown": max_drawdown
+    }
+
+    return metrics
