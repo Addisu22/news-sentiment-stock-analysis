@@ -70,7 +70,7 @@ def apply_ta(df):
     return df
 
 
-def fin_metrics(df):
+def fin_met(df):
   
   # Prepare data
     df['Date'] = pd.to_datetime(df['Date'])
@@ -91,10 +91,10 @@ def fin_metrics(df):
     drawdown = (cumulative - peak) / peak
     max_drawdown = drawdown.min()
 
-    metrics = {
+    met = {
         "Annualized Volatility": volatility,
         "Annualized Sharpe Ratio": sharpe_ratio,
         "Maximum Drawdown": max_drawdown
     }
     
-    return metrics
+    return met
