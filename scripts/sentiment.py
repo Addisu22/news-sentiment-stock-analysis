@@ -4,6 +4,9 @@ import textblob as tb
 import matplotlib.pyplot as plt
 import seaborn as sns  
 import logging
+import re
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import LatentDirichletAllocatio
 
 
 def load_data(data_path):
@@ -97,4 +100,43 @@ def publication_trend(df, date='date', freq='D'):
         return counts
     except Exception as e:
         print(f"Error in publication_trend: {e}")
+        return None
+    
+
+    def preprocess_text(df, text_col='headline'):  
+      try:
+        if text_col not in df.columns:
+            raise ValueError(f"Column '{text_col}' not found in dataframe.")
+        
+        df = df.copy()
+        df[text_col] = df[text_col].astype(str).str.lower()
+        df[text_col] = df[text_col].apply(lambda x: re.sub(r'[^a-z\s]', '', x))
+        return df
+      except Exception as e:
+        print(f"Error in preprocess_text: {e}")
+        return None
+      
+
+    def extract_topics(df, text_col='headline', num_topics=5, num_words=10):
+      try:
+        if df is None or text_col not in df.columns:
+            raise ValueError("Valid DataFrame with text column is required.")
+
+        # Vectorize the text
+        vectorizer = CountVectorizer(stop_words='english', max_df=0.9, min_df=2)
+        doc_term_matrix = vectorizer.fit_transform(df[text_col])
+        
+        # Apply LDA
+        lda = LatentDirichletAllocation(n_components=num_topics, random_state=42)
+        lda.fit(doc_term_matrix)
+
+        # Extract topics
+        words = vectorizer.get_feature_names_out()
+        topics = []
+        for i, topic in enumerate(lda.components_):
+            topic_keywords = [words[i] for i in topic.argsort()[:-num_words - 1:-1]]
+            topics.append(f"Topic {i+1}: " + ", ".join(topic_keywords))
+        return topics
+      except Exception as e:
+        print(f"Error in extract_topics: {e}")
         return None
