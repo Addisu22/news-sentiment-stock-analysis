@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import talib
 
 def load_data(file_paths):
     dfs = []
@@ -42,3 +43,23 @@ def visualize_data(file_paths):
     plt.show()
 
     return df[['Date', 'Adj Close', 'Ticker']]
+
+def apply_talib_indicators(df):
+
+    # Check if necessary columns exist
+    if 'Adj Close' not in df.columns:
+        raise ValueError("DataFrame must contain 'Adj Close' column.")
+    
+    # Simple Moving Average (SMA) over 20 days
+    df['SMA_20'] = talib.SMA(df['Adj Close'], timeperiod=20)
+    
+    # Relative Strength Index (RSI) with 14-day window
+    df['RSI_14'] = talib.RSI(df['Adj Close'], timeperiod=14)
+    
+    # MACD calculation
+    macd, macdsignal, macdhist = talib.MACD(df['Adj Close'], fastperiod=12, slowperiod=26, signalperiod=9)
+    df['MACD'] = macd
+    df['MACD_Signal'] = macdsignal
+    df['MACD_Hist'] = macdhist
+    
+    return df
