@@ -6,52 +6,6 @@ import seaborn as sns
 import logging
 
 
-def load_news_data(file_path):
-    try:
-        df = pd.read_csv(file_path)
-        df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
-        df.dropna(subset=['Date'], inplace=True)
-        return df
-    except Exception as e:
-        print(f"[Error loading data] {e}")
-        return None
-
-def headline_length_stats(df):
-    try:
-        df['Length'] = df['Headline'].astype(str).apply(len)
-        return df['Length'].describe()
-    except Exception as e:
-        print(f"[Error in headline length stats] {e}")
-        return None
-
-def article_count_per_publisher(df):
-    try:
-        return df['Publisher'].value_counts()
-    except Exception as e:
-        print(f"[Error counting articles per publisher] {e}")
-        return None
-
-def publication_trend(df, freq='D'):
-    # try:
-    #     return df.groupby(df['Date'].dt.to_period(freq)).size().rename("Article_Count")
-    # except Exception as e:
-    #     print(f"[Error analyzing publication trend] {e}")
-    #     return None
-    try:
-        if 'Date' not in df.columns:
-            raise ValueError("Missing 'Date' column.")
-        df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
-        df.dropna(subset=['Date'], inplace=True)
-        grouped = df.groupby(df['Date'].dt.to_period(freq)).size().rename("Article_Count")
-        return grouped
-    except Exception as e:
-        print(f"[Error analyzing publication trend] {e}")
-        return pd.Series()
-
-
-
-
-
 def load_data(data_path):
 
     try:
@@ -99,3 +53,30 @@ def filter_company_news(df, companies):
 
 def summarize_sentiment(df):
     return df["Polarity"].describe()
+
+
+def headline_length_stats(df, headline_col='Headline'):
+    try:
+        if headline_col not in df.columns:
+            raise ValueError(f"Column '{headline_col}' not found in dataframe.")
+        
+        # Compute length of each headline string
+        df['headline_length'] = df[headline_col].astype(str).apply(len)
+        
+        # Return basic descriptive statistics
+        return df['headline_length'].describe()
+    except Exception as e:
+        print(f"Error in headline_length_stats: {e}")
+        return None
+    
+
+def count_articles_per_publisher(df, publisher_col='Publisher'):
+    try:
+        if publisher_col not in df.columns:
+            raise ValueError(f"Column '{publisher_col}' not found in dataframe.")
+        
+        return df[publisher_col].value_counts()
+    except Exception as e:
+        print(f"Error in count_articles_per_publisher: {e}")
+        return None
+
