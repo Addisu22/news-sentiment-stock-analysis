@@ -57,11 +57,11 @@ def summarize_sentiment(df):
 
 def headline_length_stats(df, headline_col='Headline'):
     try:
-        if headline_col not in df.columns:
-            raise ValueError(f"Column '{headline_col}' not found in dataframe.")
+        if headline not in df.columns:
+            raise ValueError(f"Column '{headline}' not found in dataframe.")
         
         # Compute length of each headline string
-        df['headline_length'] = df[headline_col].astype(str).apply(len)
+        df['headline_length'] = df[headline].astype(str).apply(len)
         
         # Return basic descriptive statistics
         return df['headline_length'].describe()
@@ -70,12 +70,12 @@ def headline_length_stats(df, headline_col='Headline'):
         return None
     
 
-def count_articles_per_publisher(df, publisher_col='Publisher'):
+def count_articles_per_publisher(df, publisher='Publisher'):
     try:
-        if publisher_col not in df.columns:
-            raise ValueError(f"Column '{publisher_col}' not found in dataframe.")
+        if publisher not in df.columns:
+            raise ValueError(f"Column '{publisher}' not found in dataframe.")
         
-        return df[publisher_col].value_counts()
+        return df[publisher].value_counts()
     except Exception as e:
         print(f"Error in count_articles_per_publisher: {e}")
         return None
