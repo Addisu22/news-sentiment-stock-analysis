@@ -71,26 +71,29 @@ def apply_ta(df):
 
 def fin_metrics(df):
   
-    # Ensure Date is datetime and set as index
+  # Prepare data
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.set_index('Date').sort_index()
 
-    # Calculate daily returns
-    returns = Returns.calculate(df['Close'], returns_type='log')
+    # Calculate daily log returns
+    df['Log_Returns'] = np.log(df['Close'] / df['Close'].shift(1))
 
-    # Calculate volatility (standard deviation of returns)
-    volatility = Risk.volatility(returns, window=252)  # annualized volatility
+    # Annualized volatility (std dev of returns * sqrt trading days)
+    volatility = df['Log_Returns'].std() * np.sqrt(252)
 
-    # Calculate Sharpe ratio (using risk-free rate = 0 for simplicity)
-    sharpe_ratio = Risk.sharpe_ratio(returns, risk_free_rate=0.0, window=252)
+    # Annualized Sharpe Ratio assuming risk-free rate = 0
+    sharpe_ratio = (df['Log_Returns'].mean() / df['Log_Returns'].std()) * np.sqrt(252)
 
     # Calculate max drawdown
-    max_drawdown = Risk.max_drawdown(df['Close'])
+    cumulative = (1 + df['Log_Returns']).cumprod()
+    peak = cumulative.cummax()
+    drawdown = (cumulative - peak) / peak
+    max_drawdown = drawdown.min()
 
     metrics = {
-        "Annualized Volatility": volatility[-1],
-        "Annualized Sharpe Ratio": sharpe_ratio[-1],
+        "Annualized Volatility": volatility,
+        "Annualized Sharpe Ratio": sharpe_ratio,
         "Maximum Drawdown": max_drawdown
     }
-
+    
     return metrics
