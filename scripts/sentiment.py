@@ -202,8 +202,8 @@ def extract_email_domains(df):
 
 def day_of_week_analysis(df):
     try:
-        df['published_date'] = pd.to_datetime(df['published_date'])
-        df['day_of_week'] = df['published_date'].dt.day_name()
+        df['date'] = pd.to_datetime(df['date'])
+        df['day_of_week'] = df['date'].dt.day_name()
         return df['day_of_week'].value_counts()
     except Exception as e:
         print(f"Error in weekday analysis: {e}")
@@ -211,8 +211,8 @@ def day_of_week_analysis(df):
 
 def daily_article_counts(df):
     try:
-        df['published_date'] = pd.to_datetime(df['published_date'])
-        counts = df['published_date'].dt.date.value_counts().sort_index()
+        df['ate'] = pd.to_datetime(df['date'])
+        counts = df['date'].dt.date.value_counts().sort_index()
         return counts
     except Exception as e:
         print(f"Error in daily article analysis: {e}")
