@@ -55,7 +55,7 @@ def summarize_sentiment(df):
     return df["Polarity"].describe()
 
 
-def headline_length_stats(df, headline_col='Headline'):
+def headline_length_stats(df, headline='headline'):
     try:
         if headline not in df.columns:
             raise ValueError(f"Column '{headline}' not found in dataframe.")
@@ -70,7 +70,7 @@ def headline_length_stats(df, headline_col='Headline'):
         return None
     
 
-def count_articles_per_publisher(df, publisher='Publisher'):
+def count_articles_per_publisher(df, publisher='publisher'):
     try:
         if publisher not in df.columns:
             raise ValueError(f"Column '{publisher}' not found in dataframe.")
