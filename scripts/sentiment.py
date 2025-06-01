@@ -6,7 +6,7 @@ import seaborn as sns
 import logging
 import re
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocatio
+from sklearn.decomposition import LatentDirichletAllocation
 
 
 def load_data(data_path):
