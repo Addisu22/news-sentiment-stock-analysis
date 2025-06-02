@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 pycache/
 .env
 *.ipynb_checkpoints
 .vscode/
 Data/
+=======
+Data
+ta_lib-0.6.3-cp311-cp311-win_amd64.whl
+>>>>>>> task-1
