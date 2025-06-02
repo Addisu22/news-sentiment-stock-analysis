@@ -33,13 +33,13 @@ def load_stock_data(file_path, ticker_name=None):
     try:
         df = pd.read_csv(file_path)
         
-        if 'date' not in df.columns:
-            print("'date' column not found in stock data.")
+        if 'Date' not in df.columns:
+            print("'Date' column not found in stock data.")
             return None
         
         # Normalize stock dates
-        df['date'] = pd.to_datetime(df['date'], errors='coerce').dt.date
-        df = df.dropna(subset=['date'])
+        df['Date'] = pd.to_datetime(df['Date'], errors='coerce').dt.date
+        df = df.dropna(subset=['Date'])
 
           # Add Ticker name column if provided
         if ticker_name:
