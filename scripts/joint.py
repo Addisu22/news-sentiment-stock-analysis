@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from textblob import TextBlob
 import talib
 import pandas as pd
 import textblob as tb 
@@ -63,3 +64,48 @@ def align_by_date(news_df, stock_df):
     except Exception as e:
         print(f"Error aligning datasets: {e}")
         return None
+    
+
+
+# Load your news data (replace path as needed)
+def load_news(filepath):
+    try:
+        df = pd.read_csv(filepath)
+        if 'headline' not in df.columns:
+            raise ValueError("Missing 'headline' column.")
+        df.dropna(subset=['headline'], inplace=True)
+        return df
+    except Exception as e:
+        print(f"Error loading news data: {e}")
+        return pd.DataFrame()
+
+# Function to calculate sentiment polarity
+def get_sentiment_polarity(text):
+    try:
+        return TextBlob(text).sentiment.polarity
+    except Exception:
+        return 0.0
+
+# Function to classify polarity score
+def classify_sentiment(score):
+    if score > 0.1:
+        return 'Positive'
+    elif score < -0.1:
+        return 'Negative'
+    else:
+        return 'Neutral'
+
+# Apply sentiment analysis
+def sentiment_analysis(news_df):
+    news_df['sentiment_score'] = news_df['headline'].apply(get_sentiment_polarity)
+    news_df['sentiment_label'] = news_df['sentiment_score'].apply(classify_sentiment)
+    return news_df
+
+# Example usage
+news_df = load_news_data("raw_analytic_rating.csv")
+if not news_df.empty:
+    analyzed_df = sentiment_analysis(news_df)
+    print(analyzed_df[['headline', 'sentiment_score', 'sentiment_label']].head())
+else:
+    print("News data could not be loaded.")
+
