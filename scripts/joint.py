@@ -58,7 +58,7 @@ def align_by_date(news_df, stock_df):
             return None, None
 
         # Merge on normalized date
-        aligned_df = pd.merge(news_df, stock_df, on='date', how='inner')
+        aligned_df = pd.merge(news_df, stock_df, on='Date', how='inner')
         return aligned_df
     except Exception as e:
         print(f"Error aligning datasets: {e}")
