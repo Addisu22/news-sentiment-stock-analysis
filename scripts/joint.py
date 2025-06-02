@@ -29,7 +29,7 @@ def load_news_data(file_path):
     
 
 # Function to load and preprocess stock data
-def load_stock_data(file_pathm, ticker_name=None):
+def load_stock_data(file_path, ticker_name=None):
     try:
         df = pd.read_csv(file_path)
         
