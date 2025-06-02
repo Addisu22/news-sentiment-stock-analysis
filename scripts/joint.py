@@ -29,7 +29,7 @@ def load_news_data(file_path):
     
 
 # Function to load and preprocess stock data
-def load_stock_data(file_path):
+def load_stock_data(file_pathm, ticker_name=None):
     try:
         df = pd.read_csv(file_path)
         
@@ -40,10 +40,14 @@ def load_stock_data(file_path):
         # Normalize stock dates
         df['date'] = pd.to_datetime(df['date'], errors='coerce').dt.date
         df = df.dropna(subset=['date'])
+
+          # Add Ticker name column if provided
+        if ticker_name:
+            df['Ticker'] = ticker_name
         
         return df
     except Exception as e:
-        print(f"Error loading stock data: {e}")
+        print(f"Error loading stock data {file_path}: {e}")
         return None
 
 
