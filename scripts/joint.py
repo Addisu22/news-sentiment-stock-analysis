@@ -97,15 +97,11 @@ def classify_sentiment(score):
 
 # Apply sentiment analysis
 def sentiment_analysis(news_df):
-    news_df['sentiment_score'] = news_df['headline'].apply(get_sentiment_polarity)
-    news_df['sentiment_label'] = news_df['sentiment_score'].apply(classify_sentiment)
-    return news_df
-
-# Example usage
-news_df = load_news_data("raw_analytic_rating.csv")
-if not news_df.empty:
-    analyzed_df = sentiment_analysis(news_df)
-    print(analyzed_df[['headline', 'sentiment_score', 'sentiment_label']].head())
-else:
-    print("News data could not be loaded.")
+  try:
+        news_df['sentiment_score'] = news_df['headline'].apply(get_sentiment_polarity)
+        news_df['sentiment_label'] = news_df['sentiment_score'].apply(classify_sentiment)
+        return news_df
+  except Exception as e:
+        print(f"Sentiment analysis failed: {e}")
+        return news_df
 
