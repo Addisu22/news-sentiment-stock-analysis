@@ -218,3 +218,16 @@ def daily_article_counts(df):
     except Exception as e:
         print(f"Error in daily article analysis: {e}")
         return None
+
+def align_by_date(news_df, stock_df):
+    try:
+        if news_df is None or stock_df is None:
+            print("One of the datasets is missing.")
+            return None, None
+
+        # Merge on normalized date
+        aligned_df = pd.merge(news_df, stock_df, on='date', how='inner')
+        return aligned_df
+    except Exception as e:
+        print(f"Error aligning datasets: {e}")
+        return None
