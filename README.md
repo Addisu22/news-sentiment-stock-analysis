@@ -4,6 +4,25 @@ This repository contains the setup and exploratory analysis for **Week 1 – Pre
 
 
 ##  Project Structure
+├── .vscode/
+│   └── settings.json
+├── .github/
+│   └── workflows/
+│       └── unittests.yml
+├── notebooks/
+│   ├── __init__.py
+│   └── README.md
+├── scripts/
+│   ├── __init__.py
+│   └── README.md
+├── src/
+│   └── __init__.py
+├── tests/
+│   └── __init__.py
+├── requirements.txt
+├── README.md
+└── .gitignore
+
 ##  Objectives (Task 1)
 
  ✅ Setup Git and GitHub with proper branching.
