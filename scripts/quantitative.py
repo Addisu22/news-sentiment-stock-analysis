@@ -9,23 +9,25 @@ import pandas as pd
 
 
 def load_data(file_paths, ticker_name=None):
-    dfs = []
-    for path in file_paths:
-        df = pd.read_csv(path)
-        df['Date'] = pd.to_datetime(df['Date'])
-        ticker = os.path.basename(path).split(".")[0].upper()
-        df = df[['Date', 'Adj Close']].copy()
-        df.rename(columns={'Adj Close': ticker}, inplace=True)
-        dfs.append(df)
-    
-    # Merge on Date
-    combined_df = dfs[0]
-    for other_df in dfs[1:]:
-        combined_df = pd.merge(combined_df, other_df, on='Date', how='outer')
-    
-    combined_df.sort_values('Date', inplace=True)
-    combined_df.set_index('Date', inplace=True)
-    return combined_df
+    try:
+        df = pd.read_csv(file_path)
+        
+        if 'Date' not in df.columns:
+            print("'Date' column not found in stock data.")
+            return None
+        
+        # Normalize stock dates
+        df['Date'] = pd.to_datetime(df['Date'], errors='coerce').dt.date
+        df = df.dropna(subset=['Date'])
+
+          # Add Ticker name column if provided
+        if ticker_name:
+            df['Ticker'] = ticker_name
+        
+        return df
+    except Exception as e:
+        print(f"Error loading stock data {file_path}: {e}")
+        return None
 
 def visualize_data(file_paths):
     # Combine all CSVs
