@@ -29,23 +29,23 @@ def load_data_stocks(file_path, ticker_name=None):
         return None
     
 # Load Dataset for Individual Stock
-def load_data_(file_paths):
-    dfs = []
-    for path in file_paths:
-        df = pd.read_csv(path)
-        df['Date'] = pd.to_datetime(df['Date'])
-        ticker = os.path.basename(path).split(".")[0].upper()
-        df = df[['Date', 'Adj Close']].copy()
-        df.rename(columns={'Adj Close': ticker}, inplace=True)
-        dfs.append(df)
-    
-    # Merge on Date
-    combined_df = dfs[0]
-    for other_df in dfs[1:]:
-        combined_df = pd.merge(combined_df, other_df, on='Date', how='outer')
-    
-    combined_df.sort_values('Date', inplace=True)
-    combined_df.set_index('Date', inplace=True)
+def load_data(file_dict):
+    combined_df = pd.DataFrame()
+
+    for path, ticker in file_dict.items():
+        try:
+            df = pd.read_csv(path, parse_dates=['Date'], usecols=['Date', 'Adj Close'])
+            df.rename(columns={'Adj Close': ticker}, inplace=True)
+            df.set_index('Date', inplace=True)
+
+            if combined_df.empty:
+                combined_df = df
+            else:
+                combined_df = combined_df.join(df, how='outer')
+        except Exception as e:
+            print(f"Error loading {path}: {e}")
+
+    combined_df.sort_index(inplace=True)
     return combined_df
 
 
