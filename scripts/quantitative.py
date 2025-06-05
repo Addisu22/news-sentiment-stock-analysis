@@ -8,7 +8,7 @@ import pandas as pd
 
 
 
-def load_data(file_paths, ticker_name=None):
+def load_data_stock(file_path, ticker_name=None):
     try:
         df = pd.read_csv(file_path)
         
