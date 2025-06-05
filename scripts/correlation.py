@@ -144,10 +144,10 @@ def calculate_daily_returns(df, price_column='Adj Close', date_column='Date'):
         df = df.sort_values(by=date_column)
 
         # Calculate returns
-        df['Daily_return'] = df[price_column].pct_change()
+        df['daily_return'] = df[price_column].pct_change()
 
         # Keep only relevant columns
-        return df[[date_column, 'Daily_return']].rename(columns={'Daily_return': f"{ticker}_return"})
+        return df[[date_column, 'daily_return']].rename(columns={'daily_return': f"{ticker}_return"})
 
     except Exception as e:
         print(f"Error calculating daily returns for {ticker}: {e}")
@@ -171,7 +171,7 @@ for ticker in tickers:
                 return_df = return_df.set_index('Date')
                 returns_df = returns_df.join(return_df, how='outer')  # outer join ensures all dates
     except FileNotFoundError:
-        print(f"⚠️ File not found for {ticker}: {file_path_template.format(ticker)}")
+        print(f"File not found for {ticker}: {file_path_template.format(ticker)}")
 
 # Reset index for inspection
 returns_df.reset_index(inplace=True)
