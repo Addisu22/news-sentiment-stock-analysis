@@ -109,6 +109,28 @@ def sentiment_analysis(news_df):
 
   import pandas as pd
 
+# def calculate_daily_returns(df, price_column='Adj Close', date_column='Date'):
+#     try:
+#         if price_column not in df.columns:
+#             raise KeyError(f"'{price_column}' column not found in DataFrame.")
+#         if date_column not in df.columns:
+#             raise KeyError(f"'{date_column}' column not found in DataFrame.")
+
+#         # Ensure date is datetime and sort
+#         df[date_column] = pd.to_datetime(df[date_column], errors='coerce')
+#         df = df.dropna(subset=[date_column, price_column])
+#         df = df.sort_values(by=date_column)
+
+#         # Calculate returns
+#         df['daily_return'] = df[price_column].pct_change()
+
+#         return df
+#     except Exception as e:
+#         print(f"Error calculating daily returns: {e}")
+#         return pd.DataFrame()
+
+
+# Function to calculate daily returns
 def calculate_daily_returns(df, price_column='Adj Close', date_column='Date'):
     try:
         if price_column not in df.columns:
@@ -122,13 +144,41 @@ def calculate_daily_returns(df, price_column='Adj Close', date_column='Date'):
         df = df.sort_values(by=date_column)
 
         # Calculate returns
-        df['daily_return'] = df[price_column].pct_change()
+        df['Daily_return'] = df[price_column].pct_change()
 
-        return df
+        # Keep only relevant columns
+        return df[[date_column, 'Daily_return']].rename(columns={'Daily_return': f"{ticker}_return"})
+
     except Exception as e:
-        print(f"Error calculating daily returns: {e}")
+        print(f"Error calculating daily returns for {ticker}: {e}")
         return pd.DataFrame()
 
+# List of stock tickers and their file paths
+tickers = ['AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'TSLA', 'NVDA']
+file_path_template = "Data/{}_historical_data.csv"
+
+# DataFrame to store aligned returns
+returns_df = pd.DataFrame()
+
+for ticker in tickers:
+    try:
+        df = pd.read_csv(file_path_template.format(ticker))
+        return_df = calculate_daily_returns(df)
+        if not return_df.empty:
+            if returns_df.empty:
+                returns_df = return_df.set_index('Date')
+            else:
+                return_df = return_df.set_index('Date')
+                returns_df = returns_df.join(return_df, how='outer')  # outer join ensures all dates
+    except FileNotFoundError:
+        print(f"⚠️ File not found for {ticker}: {file_path_template.format(ticker)}")
+
+# Reset index for inspection
+returns_df.reset_index(inplace=True)
+
+# Preview
+print("Combined daily returns for 7 stocks:")
+print(returns_df.head())
 
 
 
