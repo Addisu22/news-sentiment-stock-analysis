@@ -8,7 +8,7 @@ import pandas as pd
 
 
 
-def load_data(file_paths):
+def load_data(file_paths, ticker_name=None):
     dfs = []
     for path in file_paths:
         df = pd.read_csv(path)
