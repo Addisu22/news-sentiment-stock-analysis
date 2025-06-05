@@ -94,6 +94,27 @@ def apply_talib(df):
     return df
 
 
+def plot_RSI(stock_results, *tickers):
+    import matplotlib.pyplot as plt
+
+    for ticker in tickers:
+        try:
+            df = stock_results[ticker]
+            plt.figure(figsize=(12, 4))
+            plt.plot(df.index, df['RSI_14'], label=f'{ticker} RSI (14)', color='blue')
+            plt.axhline(70, color='red', linestyle='--', label='Overbought')
+            plt.axhline(30, color='green', linestyle='--', label='Oversold')
+            plt.title(f'{ticker} RSI Indicator')
+            plt.xlabel('Date')
+            plt.ylabel('RSI Value')
+            plt.legend()
+            plt.grid(True)
+            plt.tight_layout()
+            plt.show()
+        except Exception as e:
+            print(f"Error plotting RSI for {ticker}: {e}")
+
+
 # for Financial Metrics of PyNance
 def fin_met(df):
   
