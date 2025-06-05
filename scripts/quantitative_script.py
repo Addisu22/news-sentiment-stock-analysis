@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import talib
+import seaborn as sns
 import pandas as pd
 # from pynance import Returns, Risk, Portfolio
 
@@ -212,4 +213,15 @@ def visualize_indicators(df, ticker_name="Stock"):
     plt.legend()
     plt.grid(True)
     plt.show()
+
+# Assuming you defined this function somewhere earlier
+def plot_correlation_matrix(df, title="Correlation Matrix of Stocks"):
+    correlation_matrix = df.corr()
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+    plt.title(title)
+    plt.tight_layout()
+    plt.show()
+    return correlation_matrix
+
 
