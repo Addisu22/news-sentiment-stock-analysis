@@ -6,9 +6,8 @@ import talib
 import pandas as pd
 # from pynance import Returns, Risk, Portfolio
 
-
-
-def load_data_stock(file_path, ticker_name=None):
+# Load Dataset for Seven Stocks
+def load_data_stocks(file_path, ticker_name=None):
     try:
         df = pd.read_csv(file_path)
         
@@ -28,7 +27,29 @@ def load_data_stock(file_path, ticker_name=None):
     except Exception as e:
         print(f"Error loading stock data {file_path}: {e}")
         return None
+    
+# Load Dataset for Individual Stock
+def load_data_(file_paths):
+    dfs = []
+    for path in file_paths:
+        df = pd.read_csv(path)
+        df['Date'] = pd.to_datetime(df['Date'])
+        ticker = os.path.basename(path).split(".")[0].upper()
+        df = df[['Date', 'Adj Close']].copy()
+        df.rename(columns={'Adj Close': ticker}, inplace=True)
+        dfs.append(df)
+    
+    # Merge on Date
+    combined_df = dfs[0]
+    for other_df in dfs[1:]:
+        combined_df = pd.merge(combined_df, other_df, on='Date', how='outer')
+    
+    combined_df.sort_values('Date', inplace=True)
+    combined_df.set_index('Date', inplace=True)
+    return combined_df
 
+
+# Visualize Stocks
 def visualize_data(file_paths):
     # Combine all CSVs
     df_list = []
@@ -51,6 +72,7 @@ def visualize_data(file_paths):
 
     return df[['Date', 'Adj Close', 'Ticker']]
 
+# Technical Analysis for Stocks
 def apply_talib(df):
 
     # Check if necessary columns exist
@@ -72,6 +94,7 @@ def apply_talib(df):
     return df
 
 
+# for Financial Metrics of PyNance
 def fin_met(df):
   
   # Prepare data
@@ -102,6 +125,7 @@ def fin_met(df):
     return met
 
 
+# Measure of Technical Analysis
 def visualize_indicators(df, ticker_name="Stock"):
   
     # Convert 'Date' to datetime and sort
