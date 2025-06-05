@@ -94,6 +94,26 @@ def apply_talib(df):
     return df
 
 
+def plot_SMA(stock_result, *tickers):
+    import matplotlib.pyplot as plt
+
+    for ticker in tickers:
+        try:
+            df = stock_result[ticker]
+            plt.figure(figsize=(12, 4))
+            plt.plot(df.index, df['SMA_20'], label=f'{ticker} SMA (20)', color='Green')
+            plt.axhline(70, color='red', linestyle='--', label='Overbought')
+            plt.axhline(30, color='green', linestyle='--', label='Oversold')
+            plt.title(f'{ticker} SMA Indicator')
+            plt.xlabel('Date')
+            plt.ylabel('SMA Value')
+            plt.legend()
+            plt.grid(True)
+            plt.tight_layout()
+            plt.show()
+        except Exception as e:
+            print(f"Error plotting SMA for {ticker}: {e}")
+
 def plot_RSI(stock_results, *tickers):
     import matplotlib.pyplot as plt
 
@@ -113,8 +133,6 @@ def plot_RSI(stock_results, *tickers):
             plt.show()
         except Exception as e:
             print(f"Error plotting RSI for {ticker}: {e}")
-
-
 # for Financial Metrics of PyNance
 def fin_met(df):
   
